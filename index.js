@@ -2,40 +2,6 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
 
-// TODO: Create an array of questions for user input
-// const questions = [
-//     {
-//         type: 'input',
-//         message: 'What is your name?',
-//         name: 'name',
-//     },
-//     {
-//         type: 'input',
-//         message: 'What was your motivation?',
-//         name: 'motivation',
-//     },
-//     {
-//         type: 'input',
-//         message: 'Why did you build this project?',
-//         name: 'why',
-//     },
-//     {
-//         type: 'input',
-//         message: 'What problem does it solve?',
-//         name: 'problem',
-//     },
-//     {
-//         type: 'input',
-//         message: 'What did you learn?',
-//         name: 'learn',
-//     },
-//     {
-//         type: 'input',
-//         message: 'What makes your project stand out?',
-//         name: 'standout',
-//     },
-// ];
-
 inquirer
 .prompt([
     {
@@ -57,7 +23,7 @@ inquirer
         type: 'checkbox',
         message: 'Are you working with any license?',
         name: 'license',
-        choices: ['Apache v2.0', 'GNU v3.0', 'MIT License', 'BSD 2-Clause']
+        choices: ['Apache', 'GNU', 'MIT', 'BSD']
     },
     {
         type: 'input',
@@ -92,8 +58,28 @@ inquirer
 ])
 
 .then((response) => {
+
+function badging (response) {
+    if (response.license === 'Apache') {
+        let badge = 'https://img.shields.io/aur/license/android-studio';
+    } else if(response.license === 'MIT') {
+        let badge = "https://img.shields.io/bower/l/readme";
+    } else if(response.license === 'BSD') {
+        let badge = "https://img.shields.io/aur/license/a";
+    } else {
+        let badge = "https://img.shields.io/eclipse-marketplace/l/notepad4e";
+    }
+    return badge;
+    }
+badging(response);
+
+fs.writeFile('README.md', JSON.stringify(response), (err) =>
+err ? console.error(err) : console.log('Success!')
+);
+
 fs.appendFile('README.md', `
 ### ${response.projectName}
+![badge](${badge})
 
 ## Description
 
@@ -160,9 +146,7 @@ err ? console.error(err) : console.log('Commit logged!')
 
 
 )// TODO: Create a function to write README file
-// fs.writeFile('README.md', JSON.stringify(data), (err) =>
-// err ? console.error(err) : console.log('Success!')
-// );
+
 })
 
 // TODO: Create a function to initialize app
